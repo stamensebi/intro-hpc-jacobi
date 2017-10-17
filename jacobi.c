@@ -32,7 +32,7 @@ static float CONVERGENCE_THRESHOLD;
 #define SEPARATOR "------------------------------------\n"
 
 // Return the current time in seconds since the Epoch
-float get_timestamp();
+double get_timestamp();
 
 // Parse command line arguments to set solver parameters
 void parse_arguments(int argc, char *argv[]);
@@ -98,7 +98,7 @@ int main(int argc, char *argv[])
   printf("Convergence threshold:  %lf\n", CONVERGENCE_THRESHOLD);
   printf(SEPARATOR);
 
-  float total_start = get_timestamp();
+  double total_start = get_timestamp();
 
   // Initialize data
   srand(SEED);
@@ -117,9 +117,9 @@ int main(int argc, char *argv[])
   }
 
   // Run Jacobi solver
-  float solve_start = get_timestamp();
+  double solve_start = get_timestamp();
   int itr = run(A, b, x, xtmp);
-  float solve_end = get_timestamp();
+  double solve_end = get_timestamp();
 
   // Check error of final solution
   float err = 0.0;
@@ -135,7 +135,7 @@ int main(int argc, char *argv[])
   }
   err = sqrt(err);
 
-  float total_end = get_timestamp();
+  double total_end = get_timestamp();
 
   printf("Solution error = %lf\n", err);
   printf("Iterations     = %d\n", itr);
@@ -153,7 +153,7 @@ int main(int argc, char *argv[])
   return 0;
 }
 
-float get_timestamp()
+double get_timestamp()
 {
   struct timeval tv;
   gettimeofday(&tv, NULL);
