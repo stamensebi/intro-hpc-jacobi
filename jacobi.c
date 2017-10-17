@@ -54,16 +54,16 @@ int run(float *A, float *b, float *x, float *xtmp)
   do
   {
     // Perfom Jacobi iteration
-    for (row = 0; row < N; row++)
+    for (col = 0; col < N; col++)
     {
       dot = 0.0;
-      for (col = 0; col < N; col++)
+      for (row = 0; row < N; row++)
       {
       //  if (row != col)
-          dot += A[row + col*N] * x[col];
+          dot += A[row + col*N] * x[row];
       }
-      dot -= A[row + row*N] * x[row];
-      xtmp[row] = (b[row] - dot) / A[row + row*N];
+      dot -= A[col + col*N] * x[col];
+      xtmp[col] = (b[col] - dot) / A[col + col*N];
     }
 
     // Swap pointers
