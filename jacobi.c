@@ -50,6 +50,7 @@ int run(float *A, float *b, float *x, float *xtmp)
 
   // Loop until converged or maximum iterations reached
   itr = 0;
+
   do
   {
     // Perfom Jacobi iteration
@@ -58,9 +59,10 @@ int run(float *A, float *b, float *x, float *xtmp)
       dot = 0.0;
       for (col = 0; col < N; col++)
       {
-        if (row != col)
+      //  if (row != col)
           dot += A[row + col*N] * x[col];
       }
+      dot -= A[row + row*N] * x[row];
       xtmp[row] = (b[row] - dot) / A[row + row*N];
     }
 
