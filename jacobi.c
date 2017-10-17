@@ -27,26 +27,26 @@
 static int N;
 static int MAX_ITERATIONS;
 static int SEED;
-static double CONVERGENCE_THRESHOLD;
+static float CONVERGENCE_THRESHOLD;
 
 #define SEPARATOR "------------------------------------\n"
 
 // Return the current time in seconds since the Epoch
-double get_timestamp();
+float get_timestamp();
 
 // Parse command line arguments to set solver parameters
 void parse_arguments(int argc, char *argv[]);
 
 // Run the Jacobi solver
 // Returns the number of iterations performed
-int run(double *A, double *b, double *x, double *xtmp)
+int run(float *A, float *b, float *x, float *xtmp)
 {
   int itr;
   int row, col;
-  double dot;
-  double diff;
-  double sqdiff;
-  double *ptrtmp;
+  float dot;
+  float diff;
+  float sqdiff;
+  float *ptrtmp;
 
   // Loop until converged or maximum iterations reached
   itr = 0;
@@ -87,10 +87,10 @@ int main(int argc, char *argv[])
 {
   parse_arguments(argc, argv);
 
-  double *A    = malloc(N*N*sizeof(double));
-  double *b    = malloc(N*sizeof(double));
-  double *x    = malloc(N*sizeof(double));
-  double *xtmp = malloc(N*sizeof(double));
+  float *A    = malloc(N*N*sizeof(float));
+  float *b    = malloc(N*sizeof(float));
+  float *x    = malloc(N*sizeof(float));
+  float *xtmp = malloc(N*sizeof(float));
 
   printf(SEPARATOR);
   printf("Matrix size:            %dx%d\n", N, N);
@@ -98,34 +98,34 @@ int main(int argc, char *argv[])
   printf("Convergence threshold:  %lf\n", CONVERGENCE_THRESHOLD);
   printf(SEPARATOR);
 
-  double total_start = get_timestamp();
+  float total_start = get_timestamp();
 
   // Initialize data
   srand(SEED);
   for (int row = 0; row < N; row++)
   {
-    double rowsum = 0.0;
+    float rowsum = 0.0;
     for (int col = 0; col < N; col++)
     {
-      double value = rand()/(double)RAND_MAX;
+      float value = rand()/(float)RAND_MAX;
       A[row + col*N] = value;
       rowsum += value;
     }
     A[row + row*N] += rowsum;
-    b[row] = rand()/(double)RAND_MAX;
+    b[row] = rand()/(float)RAND_MAX;
     x[row] = 0.0;
   }
 
   // Run Jacobi solver
-  double solve_start = get_timestamp();
+  float solve_start = get_timestamp();
   int itr = run(A, b, x, xtmp);
-  double solve_end = get_timestamp();
+  float solve_end = get_timestamp();
 
   // Check error of final solution
-  double err = 0.0;
+  float err = 0.0;
   for (int row = 0; row < N; row++)
   {
-    double tmp = 0.0;
+    float tmp = 0.0;
     for (int col = 0; col < N; col++)
     {
       tmp += A[row + col*N] * x[col];
@@ -135,7 +135,7 @@ int main(int argc, char *argv[])
   }
   err = sqrt(err);
 
-  double total_end = get_timestamp();
+  float total_end = get_timestamp();
 
   printf("Solution error = %lf\n", err);
   printf("Iterations     = %d\n", itr);
@@ -153,7 +153,7 @@ int main(int argc, char *argv[])
   return 0;
 }
 
-double get_timestamp()
+float get_timestamp()
 {
   struct timeval tv;
   gettimeofday(&tv, NULL);
@@ -167,10 +167,10 @@ int parse_int(const char *str)
   return strlen(next) ? -1 : value;
 }
 
-double parse_double(const char *str)
+float parse_float(const char *str)
 {
   char *next;
-  double value = strtod(str, &next);
+  float value = strtod(str, &next);
   return strlen(next) ? -1 : value;
 }
 
@@ -186,7 +186,7 @@ void parse_arguments(int argc, char *argv[])
   {
     if (!strcmp(argv[i], "--convergence") || !strcmp(argv[i], "-c"))
     {
-      if (++i >= argc || (CONVERGENCE_THRESHOLD = parse_double(argv[i])) < 0)
+      if (++i >= argc || (CONVERGENCE_THRESHOLD = parse_float(argv[i])) < 0)
       {
         printf("Invalid convergence threshold\n");
         exit(1);
