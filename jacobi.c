@@ -58,10 +58,8 @@ int run(float *A, float *b, float *x, float *xtmp)
     {
       dot = 0.0;
       for (col = 0; col < N; col++)
-      {
-      //  if (row != col)
-          dot += A[row + col*N] * x[col];
-      }
+          dot += A[col + row*N] * x[col];
+
       dot -= A[row + row*N] * x[row];
       xtmp[row] = (b[row] - dot) / A[row + row*N];
     }
@@ -110,7 +108,7 @@ int main(int argc, char *argv[])
     for (int col = 0; col < N; col++)
     {
       float value = rand()/(float)RAND_MAX;
-      A[row + col*N] = value;
+      A[col + row*N] = value;
       rowsum += value;
     }
     A[row + row*N] += rowsum;
@@ -130,7 +128,7 @@ int main(int argc, char *argv[])
     float tmp = 0.0;
     for (int col = 0; col < N; col++)
     {
-      tmp += A[row + col*N] * x[col];
+      tmp += A[col + row*N] * x[col];
     }
     tmp = b[row] - tmp;
     err += tmp*tmp;
