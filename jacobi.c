@@ -43,30 +43,28 @@ int run(float *A, float *b, float *x, float *xtmp)
 {
   int itr;
   int row, col;
-  //float *dots    = malloc(N*sizeof(float));
-  float dots[N];
+  float dot;
   float diff;
   float sqdiff;
   float *ptrtmp;
 
   // Loop until converged or maximum iterations reached
   itr = 0;
+
   do
   {
     // Perfom Jacobi iteration
-    memset( dots, 0,N*sizeof(float) );
-
-    for (col = 0; col < N; col++)
-    {
-      for (row = 0; row < N; row++)
-      {
-          dots[row] += A[row + col*N] * x[col];
-      }
-      dots[col] -= A[col + col*N] * x[col];
-    }
-
     for (row = 0; row < N; row++)
-      xtmp[row] = (b[row] - dots[row]) / A[row + row*N];
+    {
+      dot = 0.0;
+      for (col = 0; col < N; col++)
+      {
+      //  if (row != col)
+          dot += A[row + col*N] * x[col];
+      }
+      dot -= A[row + row*N] * x[row];
+      xtmp[row] = (b[row] - dot) / A[row + row*N];
+    }
 
     // Swap pointers
     ptrtmp = x;
@@ -83,6 +81,7 @@ int run(float *A, float *b, float *x, float *xtmp)
 
     itr++;
   } while ((itr < MAX_ITERATIONS) && (sqrt(sqdiff) > CONVERGENCE_THRESHOLD));
+
   return itr;
 }
 
