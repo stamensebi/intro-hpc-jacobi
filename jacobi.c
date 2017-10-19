@@ -51,11 +51,12 @@ int run(float *restrict A, float *restrict b, float *restrict x, float *restrict
   // Loop until converged or maximum iterations reached
   itr = 0;
 
-  do
+do
   {
     // Perfom Jacobi iteration
     // Check for convergence
     sqdiff = 0.0;
+    #pragma loop count min(16)
     for (row = 0; row < N; row++)
     {
       dot = 0.0;
@@ -74,10 +75,10 @@ int run(float *restrict A, float *restrict b, float *restrict x, float *restrict
     xtmp   = ptrtmp;
 
     itr++;
-  } while ((itr < MAX_ITERATIONS) && (sqrt(sqdiff) > CONVERGENCE_THRESHOLD));
-
+}while ((itr < MAX_ITERATIONS) && (sqrt(sqdiff) > CONVERGENCE_THRESHOLD));
   return itr;
 }
+
 
 int main(int argc, char *argv[])
 {
@@ -119,6 +120,7 @@ int main(int argc, char *argv[])
 
   // Check error of final solution
   float err = 0.0;
+#pragma loop count min(16)  
   for (int row = 0; row < N; row++)
   {
     float tmp = 0.0;
