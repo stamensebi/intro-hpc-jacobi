@@ -1,5 +1,5 @@
 CC = icc
-CFLAGS = -std=c99 -Wall -O3 -fast -vec-report 
+CFLAGS = -std=c99 -Wall -O3 -fast -vec-report -xHOST   
 LDFLAGS = -lm
 
 jacobi: jacobi.c
